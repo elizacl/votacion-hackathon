@@ -1,7 +1,8 @@
 # 🏆 Plataforma de Voto de Pares · Hackathon ENEISOFT XVI (2026)
 
 > **Facultad de Ingeniería de Sistemas e Informática (FISI)**  
-> **Universidad Nacional Mayor de San Marcos (UNMSM)**
+> **Universidad Nacional Mayor de San Marcos (UNMSM)**  
+> 🌐 **Despliegue Oficial en Producción:** [https://peer-voting-eneisoft.netlify.app](https://peer-voting-eneisoft.netlify.app)
 
 Aplicación web moderna de una sola página (**Single Page App - SPA**) desarrollada para gestionar la votación colegiada entre pares (*Peer Voting*) de los equipos clasificados en la **Hackathon ENEISOFT XVI**.
 
@@ -37,7 +38,7 @@ VotosHackathon/
 ├── app.js                       # Lógica de negocio (Autenticación, Podio, Drag & Drop, API)
 ├── styles.css                   # Estilos personalizados, animaciones y glassmorphism
 ├── google_apps_script_backend.gs# Código fuente del backend para Google Sheets
-├── logoEneisoft.jpg             # Logotipo oficial del evento
+├── favicon.jpg                  # Favicon e isologotipo oficial del evento
 └── README.md                    # Documentación del proyecto
 ```
 
@@ -108,24 +109,33 @@ const baseEquipos = [
 
 ---
 
-## 🌐 Despliegue en Producción (GitHub Pages)
+## 🌐 Despliegue en Producción
 
-Dado que es una aplicación estática basada en JavaScript vanilla y Tailwind CSS vía CDN, puede desplegarse gratis en segundos:
+La plataforma se encuentra actualmente desplegada y funcionando en:
+👉 **[https://peer-voting-eneisoft.netlify.app](https://peer-voting-eneisoft.netlify.app)**
 
-1. Crea un repositorio en tu cuenta de GitHub (ej. `votos-hackathon-eneisoft`).
-2. Sube todos los archivos de este directorio:
+### Opciones de despliegue continuo:
+
+#### A. Despliegue en Netlify
+1. Conecta tu repositorio de GitHub en [Netlify](https://app.netlify.com/).
+2. Configuración de publicación:
+   - **Build command:** *(dejar vacío)*
+   - **Publish directory:** `.` o `/` (raíz del proyecto)
+3. Cada vez que hagas `git push` a `main`, Netlify actualizará el sitio automáticamente.
+
+#### B. Despliegue en GitHub Pages
+1. Sube los archivos a tu repositorio en GitHub:
    ```bash
    git init
    git add .
    git commit -m "feat: Plataforma de votación ENEISOFT XVI"
    git branch -M main
-   git remote add origin https://github.com/TU_USUARIO/votos-hackathon-eneisoft.git
+   git remote add origin https://github.com/TU_USUARIO/TU_REPOSITORIO.git
    git push -u origin main
    ```
-3. En GitHub, ve a **Settings** > **Pages**.
-4. En **Build and deployment** > **Branch**, selecciona `main` y la carpeta `/(root)`. Haz clic en **Save**.
-5. En un par de minutos, GitHub te proporcionará el enlace público (ej. `https://tu-usuario.github.io/votos-hackathon-eneisoft/`).
-6. Genera un **Código QR** con ese enlace para que los participantes voten en el recinto.
+2. En GitHub, ve a **Settings** > **Pages**.
+3. En **Build and deployment** > **Branch**, selecciona `main` y la carpeta `/(root)`. Haz clic en **Save**.
+4. Genera un **Código QR** con el enlace oficial de Netlify o GitHub Pages para que los integrantes voten directamente desde sus teléfonos en la feria de proyectos.
 
 ---
 
