@@ -22,3 +22,4 @@ const APP_CONFIG = {
     TERCER_PUESTO: 1
   }
 };
+

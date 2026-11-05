@@ -1,0 +1,130 @@
+/* Custom Design Tokens & Effects based on DesingHackathon.md */
+:root {
+  --font-geist-sans: 'Inter', sans-serif;
+  --font-geist-mono: 'JetBrains Mono', monospace;
+}
+
+body {
+  background-color: #0a2138;
+  color: #ffffff;
+  font-family: var(--font-geist-sans);
+  min-height: 100vh;
+  overflow-x: hidden;
+  touch-action: pan-y;
+}
+
+.font-mono-custom {
+  font-family: var(--font-geist-mono);
+}
+
+/* Gradient Text */
+.text-gradient-eneisoft {
+  background: linear-gradient(135deg, #24ed7a 0%, #00c8df 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Flare Divider Line */
+.flare-line {
+  background: linear-gradient(90deg, transparent 0%, #24ed7a 35%, #00c8df 65%, transparent 100%);
+  height: 1px;
+}
+
+/* Cyber Matrix Grid Pattern */
+.cyber-grid {
+  background-image: linear-gradient(#24ed7a 1px, transparent 1px), linear-gradient(90deg, #24ed7a 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* Glass Effect Containers */
+.cyber-glass {
+  background: rgba(7, 19, 32, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cyber-glass-card {
+  background: linear-gradient(135deg, rgba(7, 24, 16, 0.9) 0%, rgba(5, 17, 12, 0.95) 50%, rgba(2, 7, 5, 0.98) 100%);
+  border: 1px solid rgba(36, 237, 122, 0.22);
+  backdrop-filter: blur(12px);
+}
+
+/* Primary Magnetic Glow Button */
+.btn-eneisoft-primary {
+  background-color: #24ed7a;
+  color: #0a2138;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  box-shadow: 0 0 25px rgba(36, 237, 122, 0.35);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-eneisoft-primary:hover:not(:disabled) {
+  background-color: #00c8df;
+  color: #0a2138;
+  box-shadow: 0 0 35px rgba(0, 200, 223, 0.55);
+  transform: translateY(-1px);
+}
+
+.btn-eneisoft-primary:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* Drag & Drop Feedback Classes (SortableJS) */
+.sortable-ghost {
+  opacity: 0.35;
+  border: 2px dashed #24ed7a !important;
+  background: rgba(36, 237, 122, 0.05) !important;
+  transform: scale(0.98);
+}
+
+.sortable-chosen {
+  cursor: grabbing !important;
+  box-shadow: 0 0 30px rgba(0, 200, 223, 0.45) !important;
+}
+
+.sortable-drag {
+  cursor: grabbing !important;
+  opacity: 1 !important;
+  z-index: 9999 !important;
+  transform: rotate(1.5deg) scale(1.02);
+}
+
+/* Pulse Glow Keyframe */
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(36, 237, 122, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(36, 237, 122, 0.45);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 3s infinite ease-in-out;
+}
+
+/* Custom Scrollbar for Available Teams List */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(7, 19, 32, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(36, 237, 122, 0.25);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 200, 223, 0.5);
+}
+
