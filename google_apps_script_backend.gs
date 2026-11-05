@@ -127,5 +127,13 @@ function doPost(e) {
 
 function getActiveSheet() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  return ss.getActiveSheet();
+  // Busca obligatoriamente la pestaña llamada "Hoja 1"
+  var sheet = ss.getSheetByName("VotoPares"); 
+  
+  // Si por alguna razón la borraste o no existe, usa la que esté activa por defecto
+  if (!sheet) {
+    sheet = ss.getActiveSheet();
+  }
+  
+  return sheet;
 }
