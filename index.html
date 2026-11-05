@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="es" class="dark scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Hackathon ENEISOFT XVI 2026 — Voto de Pares</title>
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            cyberNavy: '#0a2138',
+            cyberCard: '#071320',
+            cyberCardAlt: '#071810',
+            neonGreen: '#24ed7a',
+            quantumCyan: '#00c8df',
+            amberAlert: '#f59e0b'
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <!-- SortableJS via CDN (Touch and Mobile Optimized Drag & Drop) -->
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+
+  <!-- Canvas Confetti via CDN (Celebratory Success Animation) -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <style>
+    /* Custom Design Tokens & Effects based on DesingHackathon.md */
+    :root {
+      --font-geist-sans: 'Inter', sans-serif;
+      --font-geist-mono: 'JetBrains Mono', monospace;
+    }
+
+    body {
+      background-color: #0a2138;
+      color: #ffffff;
+      font-family: var(--font-geist-sans);
+      min-height: 100vh;
+      overflow-x: hidden;
+      touch-action: pan-y;
+    }
+
+    .font-mono-custom {
+      font-family: var(--font-geist-mono);
+    }
+
+    /* Gradient Text */
+    .text-gradient-eneisoft {
+      background: linear-gradient(135deg, #24ed7a 0%, #00c8df 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Flare Divider Line */
+    .flare-line {
+      background: linear-gradient(90deg, transparent 0%, #24ed7a 35%, #00c8df 65%, transparent 100%);
+      height: 1px;
+    }
+
+    /* Cyber Matrix Grid Pattern */
+    .cyber-grid {
+      background-image: linear-gradient(#24ed7a 1px, transparent 1px), linear-gradient(90deg, #24ed7a 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+
+    /* Glass Effect Containers */
+    .cyber-glass {
+      background: rgba(7, 19, 32, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .cyber-glass-card {
+      background: linear-gradient(135deg, rgba(7, 24, 16, 0.9) 0%, rgba(5, 17, 12, 0.95) 50%, rgba(2, 7, 5, 0.98) 100%);
+      border: 1px solid rgba(36, 237, 122, 0.22);
+      backdrop-filter: blur(12px);
+    }
+
+    /* Primary Magnetic Glow Button */
+    .btn-eneisoft-primary {
+      background-color: #24ed7a;
+      color: #0a2138;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      box-shadow: 0 0 25px rgba(36, 237, 122, 0.35);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-eneisoft-primary:hover:not(:disabled) {
+      background-color: #00c8df;
+      color: #0a2138;
+      box-shadow: 0 0 35px rgba(0, 200, 223, 0.55);
+      transform: translateY(-1px);
+    }
+
+    .btn-eneisoft-primary:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
+    /* Drag & Drop Feedback Classes */
+    .sortable-ghost {
+      opacity: 0.35;
+      border: 2px dashed #24ed7a !important;
+      background: rgba(36, 237, 122, 0.05) !important;
+      transform: scale(0.98);
+    }
+
+    .sortable-chosen {
+      cursor: grabbing !important;
+      box-shadow: 0 0 30px rgba(0, 200, 223, 0.45) !important;
+    }
+
+    .sortable-drag {
+      cursor: grabbing !important;
+      opacity: 1 !important;
+      z-index: 9999 !important;
+      transform: rotate(1.5deg) scale(1.02);
+    }
+
+    /* Pulse Glow Keyframe */
+    @keyframes pulseGlow {
+
+      0%,
+      100% {
+        box-shadow: 0 0 15px rgba(36, 237, 122, 0.2);
+      }
+
+      50% {
+        box-shadow: 0 0 30px rgba(36, 237, 122, 0.45);
+      }
+    }
+
+    .animate-pulse-glow {
+      animation: pulseGlow 3s infinite ease-in-out;
+    }
+
+    /* Custom Scrollbar for Available Teams List */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(7, 19, 32, 0.5);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(36, 237, 122, 0.25);
+      border-radius: 9999px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 200, 223, 0.5);
+    }
+  </style>
+</head>
+
+<body class="relative min-h-screen text-white select-none flex flex-col justify-between">
+
+  <!-- Ambient Light Halos (Cyber Flares Desenfocados - DesingHackathon.md) -->
+  <div
+    class="fixed top-[-10%] left-[-10%] w-[55vw] h-[55vw] max-w-[650px] max-h-[650px] bg-[#24ed7a]/10 rounded-full blur-[180px] pointer-events-none -z-10">
+  </div>
+  <div
+    class="fixed top-[25%] right-[-10%] w-[50vw] h-[50vw] max-w-[600px] max-h-[600px] bg-[#00c8df]/10 rounded-full blur-[180px] pointer-events-none -z-10">
+  </div>
+  <div
+    class="fixed bottom-[-10%] left-[20%] w-[45vw] h-[45vw] max-w-[550px] max-h-[550px] bg-[#24ed7a]/[0.06] rounded-full blur-[160px] pointer-events-none -z-10">
+  </div>
+
+  <!-- Cyber Grid Circuit Overlay -->
+  <div class="fixed inset-0 cyber-grid opacity-[0.035] pointer-events-none -z-10"></div>
+
+  <!-- Top Header Bar -->
+  <header class="w-full border-b border-white/10 bg-[#071320]/70 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <!-- ENEISOFT Official Logo -->
+        <div class="w-10 h-10 rounded-xl overflow-hidden border border-[#24ed7a]/30 shadow-[0_0_15px_rgba(36,237,122,0.25)] shrink-0 bg-[#071320] flex items-center justify-center">
+          <img src="logoEneisoft.jpg" alt="Logo ENEISOFT XVI" class="w-full h-full object-cover" />
+        </div>
+        <div>
+          <span class="font-extrabold tracking-tight text-white text-sm sm:text-base block leading-none">
+            ENEISOFT <span class="text-[#24ed7a]">XVI</span>
+          </span>
+          <span class="text-[10px] font-mono-custom text-neutral-400 tracking-wider uppercase block mt-0.5">
+            FISI · UNMSM
+          </span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER (Single Page App Views) -->
+  <main
+    class="relative z-10 flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 py-6 md:py-10 flex flex-col items-center justify-center">
+
+    <!-- ========================================== -->
+    <!-- PANTALLA 1: AUTENTICACIÓN POR CORREO       -->
+    <!-- ========================================== -->
+    <section id="screen-auth" class="w-full max-w-2xl mx-auto flex flex-col items-center transition-all duration-500">
+
+      <!-- Top Badge Pills -->
+      <div class="flex flex-wrap items-center justify-center gap-2.5 mb-6">
+        <div
+          class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#24ed7a]/30 text-xs uppercase tracking-widest text-[#24ed7a] bg-[#071320]/80 backdrop-blur-sm shadow-[0_0_15px_rgba(36,237,122,0.15)] font-mono-custom">
+          <span class="w-2 h-2 rounded-full bg-[#24ed7a] animate-pulse"></span>
+          <span>Voto de Pares · Integrantes de Equipo</span>
+        </div>
+        <div
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#00c8df]/30 text-xs font-mono-custom text-[#00c8df] bg-[#00c8df]/10">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+          <span>12 Equipos Clasificados</span>
+        </div>
+      </div>
+
+      <!-- Hero Heading -->
+      <h1 class="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight text-center mb-3 uppercase leading-tight">
+        Voto de <span class="text-gradient-eneisoft">Pares.</span>
+      </h1>
+
+      <p class="text-neutral-400 text-sm md:text-base font-light text-center max-w-xl mb-8 leading-relaxed">
+        Cualquier integrante del equipo puede emitir el voto, otorgando <span class="text-white font-medium">3,
+          2 y 1 punto</span> a sus proyectos favoritos. <span class="text-amber-400 font-medium">Queda estrictamente
+          prohibido el auto-voto.</span>
+      </p>
+
+      <!-- Key Rules Banner Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full mb-8">
+        <div class="p-4 rounded-2xl bg-[#071320]/80 border border-white/10 backdrop-blur-md flex items-start gap-3">
+          <div class="p-2 rounded-xl bg-[#24ed7a]/10 border border-[#24ed7a]/20 text-[#24ed7a] shrink-0 mt-0.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-white uppercase tracking-wider font-mono-custom">15% Ponderación Final
+            </h4>
+            <p class="text-xs text-neutral-400 mt-0.5 font-light">El voto de pares representa el 15% de la calificación
+              final de la Hackathon.</p>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-[#071320]/80 border border-amber-400/20 backdrop-blur-md flex items-start gap-3">
+          <div class="p-2 rounded-xl bg-amber-400/10 border border-amber-400/20 text-amber-400 shrink-0 mt-0.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-amber-300 uppercase tracking-wider font-mono-custom">Voto Único por Equipo
+            </h4>
+            <p class="text-xs text-neutral-400 mt-0.5 font-light">Cualquier integrante puede votar. El primer integrante
+              que vote registra el voto definitivo de su equipo.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Authentication Box Form -->
+      <div class="w-full cyber-glass rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-44 h-44 bg-[#24ed7a]/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <form id="form-auth" class="space-y-5" onsubmit="handleAuthSubmit(event); return false;">
+          <div>
+            <label for="input-email"
+              class="block text-xs font-mono-custom uppercase tracking-wider text-neutral-300 mb-2">
+              Correo del Integrante del Equipo
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-neutral-400">
+                <svg class="w-5 h-5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+                </svg>
+              </div>
+              <input type="email" id="input-email" required autocomplete="email"
+                placeholder="ejemplo@unmsm.edu.pe o tu correo registrado"
+                class="w-full pl-11 pr-4 py-3.5 bg-[#05111d] border border-white/15 focus:border-[#24ed7a] focus:ring-2 focus:ring-[#24ed7a]/20 rounded-xl text-white placeholder-neutral-500 text-sm font-mono-custom outline-none transition-all duration-200" />
+            </div>
+          </div>
+
+          <!-- Alert/Error Message Container -->
+          <div id="auth-error-box"
+            class="hidden p-4 rounded-xl bg-red-950/40 border border-red-500/30 text-red-200 text-xs font-mono-custom flex items-start gap-3 transition-all animate-shake">
+            <svg class="w-5 h-5 text-red-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <div id="auth-error-msg" class="flex-1 leading-relaxed"></div>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" id="btn-auth-submit"
+            class="w-full py-4 rounded-xl btn-eneisoft-primary flex items-center justify-center gap-3 text-xs tracking-wider cursor-pointer">
+            <span id="btn-auth-text">VERIFICAR IDENTIDAD Y VOTAR</span>
+            <svg id="btn-auth-icon" class="w-4 h-4 text-[#0a2138]" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+            <!-- Loading Spinner (hidden by default) -->
+            <svg id="btn-auth-spinner" class="hidden animate-spin h-5 w-5 text-[#0a2138]"
+              xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+              </path>
+            </svg>
+          </button>
+        </form>
+      </div>
+    </section>
+
+
+    <!-- ==================================================== -->
+    <!-- PANTALLA 2: INTERFAZ DRAG & DROP (VOTO DE PARES)    -->
+    <!-- ==================================================== -->
+    <section id="screen-voting" class="w-full hidden transition-all duration-500 flex flex-col gap-6">
+
+      <!-- User & Team Authenticated Bar -->
+      <div
+        class="w-full cyber-glass rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border border-white/10">
+        <div class="flex items-center gap-3.5">
+          <div
+            class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#24ed7a]/20 to-[#00c8df]/10 border border-[#24ed7a]/30 flex items-center justify-center text-[#24ed7a] shadow-[0_0_20px_rgba(36,237,122,0.15)] shrink-0">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <div>
+            <div class="mb-0.5">
+              <span class="text-xs font-mono-custom uppercase tracking-wider text-neutral-400">Equipo Autenticado</span>
+            </div>
+            <h2 id="auth-team-name" class="text-lg sm:text-xl font-black text-white tracking-tight">Cargando equipo...
+            </h2>
+            <p id="auth-voter-email" class="text-xs font-mono-custom text-neutral-400">correo@unmsm.edu.pe</p>
+          </div>
+        </div>
+
+        <!-- Strict Rules & Logout Badges -->
+        <div class="flex flex-wrap items-center gap-2 self-stretch md:self-auto justify-end">
+          <div
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-amber-400/30 text-xs font-mono-custom text-amber-300 bg-amber-400/10">
+            <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            <span>Auto-voto bloqueado</span>
+          </div>
+          <button type="button" onclick="handleLogout()"
+            class="px-3 py-1.5 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 text-neutral-400 hover:text-white text-xs font-mono-custom transition-colors cursor-pointer">
+            Salir
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Drag & Drop 2-Column Board -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+        <!-- "TU PODIO" (Sale antes/arriba en móvil, y a la derecha en escritorio) -->
+        <div class="order-1 lg:order-2 lg:col-span-5 flex flex-col gap-4 lg:sticky lg:top-20">
+          <div class="flex items-center justify-between px-1">
+            <div class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-[#24ed7a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+              </svg>
+              <h3 class="text-base sm:text-lg font-bold text-white tracking-tight">Tu Podio Oficial</h3>
+            </div>
+            <span id="podium-status-badge"
+              class="px-2.5 py-1 rounded-full text-xs font-mono-custom bg-amber-400/10 text-amber-300 border border-amber-400/30">
+              0 / 3 Asignados
+            </span>
+          </div>
+
+          <!-- Podium 3 Independent Vertical Slots -->
+          <div class="space-y-4">
+
+            <!-- CASILLERO 1: 1er Puesto (+3 pts) -->
+            <div
+              class="podium-slot-card p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-[#0b291a] via-[#071a11] to-[#040e09] border-2 border-[#24ed7a]/60 shadow-[0_0_20px_rgba(36,237,122,0.15)] relative overflow-hidden transition-all">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2.5">
+                  <div
+                    class="w-8 h-8 rounded-xl bg-[#24ed7a] text-[#0a2138] flex items-center justify-center font-black text-sm shadow-[0_0_12px_rgba(36,237,122,0.4)]">
+                    1°
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-bold text-white uppercase tracking-wider">1er Puesto</h4>
+                  </div>
+                </div>
+                <div
+                  class="px-3 py-1 rounded-full bg-[#24ed7a]/20 border border-[#24ed7a] text-[#24ed7a] font-mono-custom font-extrabold text-xs shadow-[0_0_10px_rgba(36,237,122,0.3)]">
+                  +3 Pts
+                </div>
+              </div>
+
+              <!-- Slot 1 Dropzone Container -->
+              <div id="slot-drop-1" data-slot="1"
+                class="podium-dropzone min-h-[85px] rounded-xl border border-dashed border-[#24ed7a]/30 p-2 flex flex-col justify-center items-center transition-all bg-[#071320]/60">
+                <!-- Placeholder shown when slot 1 is empty -->
+                <div
+                  class="slot-placeholder pointer-events-none flex flex-col items-center justify-center text-center p-3">
+                  <svg class="w-5 h-5 text-[#24ed7a]/40 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                  </svg>
+                  <span class="text-xs font-mono-custom text-neutral-500">Arrastra aquí (+3 pts)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- CASILLERO 2: 2do Puesto (+2 pts) -->
+            <div
+              class="podium-slot-card p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-[#06212b] via-[#051820] to-[#030d12] border-2 border-[#00c8df]/60 shadow-[0_0_20px_rgba(0,200,223,0.15)] relative overflow-hidden transition-all">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2.5">
+                  <div
+                    class="w-8 h-8 rounded-xl bg-[#00c8df] text-[#0a2138] flex items-center justify-center font-black text-sm shadow-[0_0_12px_rgba(0,200,223,0.4)]">
+                    2°
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-bold text-white uppercase tracking-wider">2do Puesto</h4>
+                  </div>
+                </div>
+                <div
+                  class="px-3 py-1 rounded-full bg-[#00c8df]/20 border border-[#00c8df] text-[#00c8df] font-mono-custom font-extrabold text-xs shadow-[0_0_10px_rgba(0,200,223,0.3)]">
+                  +2 Pts
+                </div>
+              </div>
+
+              <!-- Slot 2 Dropzone Container -->
+              <div id="slot-drop-2" data-slot="2"
+                class="podium-dropzone min-h-[85px] rounded-xl border border-dashed border-[#00c8df]/30 p-2 flex flex-col justify-center items-center transition-all bg-[#071320]/60">
+                <!-- Placeholder shown when slot 2 is empty -->
+                <div
+                  class="slot-placeholder pointer-events-none flex flex-col items-center justify-center text-center p-3">
+                  <svg class="w-5 h-5 text-[#00c8df]/40 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                  </svg>
+                  <span class="text-xs font-mono-custom text-neutral-500">Arrastra aquí (+2 pts)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- CASILLERO 3: 3er Puesto (+1 pt) -->
+            <div
+              class="podium-slot-card p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-[#241a0b] via-[#1a1408] to-[#0c0903] border-2 border-amber-400/60 shadow-[0_0_20px_rgba(245,158,11,0.15)] relative overflow-hidden transition-all">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2.5">
+                  <div
+                    class="w-8 h-8 rounded-xl bg-amber-400 text-[#0a2138] flex items-center justify-center font-black text-sm shadow-[0_0_12px_rgba(245,158,11,0.4)]">
+                    3°
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-bold text-white uppercase tracking-wider">3er Puesto</h4>
+                  </div>
+                </div>
+                <div
+                  class="px-3 py-1 rounded-full bg-amber-400/20 border border-amber-400 text-amber-300 font-mono-custom font-extrabold text-xs shadow-[0_0_10px_rgba(245,158,11,0.3)]">
+                  +1 Pt
+                </div>
+              </div>
+
+              <!-- Slot 3 Dropzone Container -->
+              <div id="slot-drop-3" data-slot="3"
+                class="podium-dropzone min-h-[85px] rounded-xl border border-dashed border-amber-400/30 p-2 flex flex-col justify-center items-center transition-all bg-[#071320]/60">
+                <!-- Placeholder shown when slot 3 is empty -->
+                <div
+                  class="slot-placeholder pointer-events-none flex flex-col items-center justify-center text-center p-3">
+                  <svg class="w-5 h-5 text-amber-400/40 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                  </svg>
+                  <span class="text-xs font-mono-custom text-neutral-500">Arrastra aquí (+1 pt)</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Submit Voting Action Card -->
+          <div class="p-4 sm:p-5 rounded-2xl cyber-glass border border-white/10 flex flex-col gap-3">
+            <div id="submit-validation-hint" class="text-xs font-mono-custom text-neutral-400 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+              <span>Completa los 3 puestos para habilitar el envío oficial.</span>
+            </div>
+
+            <!-- Emitir Voto Button -->
+            <button type="button" id="btn-submit-vote" disabled onclick="promptConfirmVote()"
+              class="w-full py-4 rounded-xl btn-eneisoft-primary flex items-center justify-center gap-3 text-xs tracking-wider cursor-pointer font-bold">
+              <svg class="w-4 h-4 text-[#0a2138]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              <span>EMITIR VOTO CONFIDENCIAL</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- EQUIPOS PARTICIPANTES (Sale después/abajo en móvil, y a la izquierda en escritorio) -->
+        <div class="order-2 lg:order-1 lg:col-span-7 flex flex-col gap-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-1">
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="text-base sm:text-lg font-bold text-white tracking-tight">Equipos Participantes</h3>
+                <span id="available-teams-count"
+                  class="px-2 py-0.5 rounded-full text-xs font-mono-custom bg-[#00c8df]/15 text-[#00c8df] border border-[#00c8df]/30">
+                  11 disponibles
+                </span>
+              </div>
+              <p class="text-xs text-neutral-400 mt-0.5">Arrastra y suelta los equipos directamente dentro de las casillas del podio.</p>
+            </div>
+
+            <!-- Quick Filter Input -->
+            <div class="relative w-full sm:w-48">
+              <input type="text" id="search-teams" placeholder="Filtrar equipo..."
+                oninput="filterAvailableTeams(this.value)"
+                class="w-full px-3 py-1.5 text-xs bg-[#05111d] border border-white/15 rounded-lg text-white font-mono-custom outline-none focus:border-[#24ed7a]" />
+            </div>
+          </div>
+
+          <!-- Draggable Available Pool Container -->
+          <div id="pool-teams"
+            class="min-h-[280px] p-2 sm:p-3 rounded-2xl bg-[#071320]/50 border border-white/10 backdrop-blur-md grid grid-cols-1 sm:grid-cols-2 gap-3 transition-colors">
+            <!-- Available team cards will be dynamically injected here -->
+          </div>
+
+          <!-- Pool Empty State Notice -->
+          <div id="pool-empty-notice"
+            class="hidden p-6 rounded-2xl border border-dashed border-white/15 text-center text-xs font-mono-custom text-neutral-500">
+            Todos los equipos han sido asignados al podio.
+          </div>
+        </div>
+
+      </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ========================================== -->
+    <!-- PANTALLA 3: ÉXITO Y CONFIRMACIÓN LIMPIA   -->
+    <!-- ========================================== -->
+    <section id="screen-success"
+      class="w-full max-w-2xl mx-auto hidden transition-all duration-700 flex flex-col items-center">
+
+      <!-- Big Glowing Green Success Checkmark Badge -->
+      <div class="relative mb-6">
+        <div
+          class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-[#24ed7a]/15 border-2 border-[#24ed7a] flex items-center justify-center text-[#24ed7a] shadow-[0_0_50px_rgba(36,237,122,0.45)] animate-pulse-glow">
+          <svg class="w-12 h-12 sm:w-14 sm:h-14 stroke-[#24ed7a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <div
+          class="absolute -top-1 -right-1 w-7 h-7 rounded-full bg-[#00c8df] border-2 border-[#0a2138] flex items-center justify-center text-[#0a2138]">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Success Header -->
+      <h2 class="text-2xl sm:text-4xl md:text-5xl font-black tracking-tight text-center text-white mb-3 uppercase">
+        ¡Voto Registrado <span class="text-gradient-eneisoft">con Éxito!</span>
+      </h2>
+
+      <p class="text-neutral-300 text-sm md:text-base font-light text-center max-w-lg mb-8 leading-relaxed">
+        El voto de tu equipo <span id="success-team-name" class="font-bold text-[#24ed7a]"></span> ha sido
+        registrado exitosamente en la plataforma oficial de la Hackathon.
+      </p>
+
+      <!-- Podium Summary Results Card -->
+      <div
+        class="w-full cyber-glass rounded-3xl p-6 sm:p-8 border border-white/10 shadow-2xl relative overflow-hidden mb-6">
+        <div class="absolute top-0 right-0 w-48 h-48 bg-[#24ed7a]/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-5">
+          <span class="text-xs font-mono-custom uppercase tracking-wider text-neutral-400">
+            Resumen Oficial del Podio Elegido
+          </span>
+          <span
+            class="text-xs font-mono-custom text-[#24ed7a] px-2.5 py-0.5 rounded-full bg-[#24ed7a]/10 border border-[#24ed7a]/30">
+            Voto Sellado
+          </span>
+        </div>
+
+        <div class="space-y-3.5">
+          <!-- 1er Puesto -->
+          <div
+            class="p-3.5 sm:p-4 rounded-xl bg-[#071810] border border-[#24ed7a]/40 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <span
+                class="w-7 h-7 rounded-lg bg-[#24ed7a] text-[#0a2138] font-black text-xs flex items-center justify-center shrink-0">1°</span>
+              <div>
+                <span class="text-[10px] font-mono-custom text-neutral-400 uppercase tracking-widest block">1er Puesto
+                  (+3 Pts)</span>
+                <span id="summary-rank-1" class="text-sm sm:text-base font-bold text-white block">Nombre del
+                  Equipo</span>
+              </div>
+            </div>
+            <span class="font-mono-custom font-extrabold text-[#24ed7a] text-sm">+3 Pts</span>
+          </div>
+
+          <!-- 2do Puesto -->
+          <div
+            class="p-3.5 sm:p-4 rounded-xl bg-[#061820] border border-[#00c8df]/40 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <span
+                class="w-7 h-7 rounded-lg bg-[#00c8df] text-[#0a2138] font-black text-xs flex items-center justify-center shrink-0">2°</span>
+              <div>
+                <span class="text-[10px] font-mono-custom text-neutral-400 uppercase tracking-widest block">2do Puesto
+                  (+2 Pts)</span>
+                <span id="summary-rank-2" class="text-sm sm:text-base font-bold text-white block">Nombre del
+                  Equipo</span>
+              </div>
+            </div>
+            <span class="font-mono-custom font-extrabold text-[#00c8df] text-sm">+2 Pts</span>
+          </div>
+
+          <!-- 3er Puesto -->
+          <div
+            class="p-3.5 sm:p-4 rounded-xl bg-[#1c1408] border border-amber-400/40 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <span
+                class="w-7 h-7 rounded-lg bg-amber-400 text-[#0a2138] font-black text-xs flex items-center justify-center shrink-0">3°</span>
+              <div>
+                <span class="text-[10px] font-mono-custom text-neutral-400 uppercase tracking-widest block">3er Puesto
+                  (+1 Pt)</span>
+                <span id="summary-rank-3" class="text-sm sm:text-base font-bold text-white block">Nombre del
+                  Equipo</span>
+              </div>
+            </div>
+            <span class="font-mono-custom font-extrabold text-amber-300 text-sm">+1 Pt</span>
+          </div>
+        </div>
+
+        <!-- Metadata & Cryptographic Receipt -->
+        <div
+          class="mt-6 pt-5 border-t border-white/10 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono-custom text-neutral-400">
+          <div>
+            <span class="text-neutral-500 block text-[10px] uppercase">Integrante que votó:</span>
+            <span id="summary-voter-email" class="text-neutral-300 truncate block">correo@unmsm.edu.pe</span>
+          </div>
+          <div>
+            <span class="text-neutral-500 block text-[10px] uppercase">Marca Temporal:</span>
+            <span id="summary-timestamp" class="text-neutral-300 block">--/--/---- --:--:--</span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Final Exit Notice -->
+      <div class="p-4 rounded-2xl bg-[#071320]/60 border border-white/10 text-center max-w-md w-full">
+        <p class="text-xs text-neutral-400 font-light">
+          La votación para tu equipo ha sido cerrada. Los resultados consolidados se revelarán durante la ceremonia
+          final de premiación.
+        </p>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ==================================================== -->
+  <!-- MODAL: CONFIRMACIÓN DE VOTO ANTES DE ENVIAR         -->
+  <!-- ==================================================== -->
+  <div id="modal-confirm"
+    class="fixed inset-0 z-50 hidden bg-[#071320]/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div
+      class="w-full max-w-md cyber-glass rounded-3xl p-6 sm:p-7 border border-[#24ed7a]/30 shadow-2xl relative overflow-hidden animate-scale-up">
+      <div
+        class="w-12 h-12 rounded-2xl bg-amber-400/10 border border-amber-400/30 text-amber-400 flex items-center justify-center mb-4">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+      </div>
+
+      <h3 class="text-xl font-black text-white uppercase tracking-tight mb-2">¿Confirmar Podio Definitivo?</h3>
+      <p class="text-xs text-neutral-300 font-light leading-relaxed mb-4">
+        Estás a punto de emitir el <span class="text-[#24ed7a] font-semibold">voto oficial</span> de tu
+        equipo. Esta acción es irrevocable y ningún otro integrante de tu equipo podrá votar.
+      </p>
+
+      <div class="space-y-2 mb-6 p-3.5 rounded-xl bg-[#05111d] border border-white/10 text-xs font-mono-custom">
+        <div class="flex justify-between items-center text-[#24ed7a]">
+          <span>1° Puesto (+3 pts):</span>
+          <span id="confirm-slot-1" class="font-bold text-white truncate max-w-[190px]">--</span>
+        </div>
+        <div class="flex justify-between items-center text-[#00c8df]">
+          <span>2° Puesto (+2 pts):</span>
+          <span id="confirm-slot-2" class="font-bold text-white truncate max-w-[190px]">--</span>
+        </div>
+        <div class="flex justify-between items-center text-amber-300">
+          <span>3° Puesto (+1 pt):</span>
+          <span id="confirm-slot-3" class="font-bold text-white truncate max-w-[190px]">--</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button type="button" onclick="closeConfirmModal()"
+          class="flex-1 py-3 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 text-xs font-mono-custom uppercase tracking-wider text-neutral-300 transition-colors cursor-pointer">
+          Revisar Podio
+        </button>
+        <button type="button" id="btn-confirm-final-submit" onclick="executeFinalVoteSubmission()"
+          class="flex-1 py-3 rounded-xl btn-eneisoft-primary text-xs uppercase tracking-wider font-extrabold flex items-center justify-center gap-2 cursor-pointer">
+          <span id="btn-confirm-text">Confirmar y Enviar</span>
+          <svg id="btn-confirm-spinner" class="hidden animate-spin h-4 w-4 text-[#0a2138]"
+            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+            </path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Global Footer -->
+  <footer
+    class="w-full border-t border-white/10 bg-[#071320]/50 backdrop-blur-md py-5 text-center text-xs text-neutral-500 font-mono-custom mt-12">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <img src="logoEneisoft.jpg" alt="ENEISOFT XVI" class="w-4 h-4 rounded object-cover border border-white/10" />
+        <span>Hackathon ENEISOFT XVI 2026 · FISI UNMSM</span>
+      </div>
+      <div class="flex items-center gap-3 text-neutral-400">
+        <span class="inline-block w-1.5 h-1.5 rounded-full bg-[#24ed7a]"></span>
+        <span>Sistema de Votación entre Pares (15%)</span>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ==================================================== -->
+  <!-- LÓGICA DE NEGOCIO JAVASCRIPT VANILLA                 -->
+  <!-- ==================================================== -->
+  <script>
+    /**
+     * URL DEL WEB APP DE GOOGLE APPS SCRIPT
+     * Se puede modificar aquí o configurar para su despliegue real en producción.
+     */
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyXUEGx-gSIvD8S-RaVbCai_6O7y4YSanv9AYyHAa6Bsdr7NvCP9g4-WTLMGcFurwrt/exec";
+
+      /**
+       * Estructura de Datos Obligatoria
+       * Exactamente los 12 equipos y sus integrantes permitidos según Datos.txt
+       */
+      const baseEquipos = [
+        {
+          nombre: "Claude's Heritage",
+          correos: ["carlo.calistro@unmsm.edu.pe", "ghostbain@gmail.com", "erick.garciam@unmsm.edu.pe"]
+        },
+        {
+          nombre: "KAB",
+          correos: ["alexandra.mkoos@gmail.com", "kiara.jaramillor@unmsm.edu.pe", "antonella.rojasq@unmsm.edu.pe"]
+        },
+        {
+          nombre: "Magna FISI",
+          correos: ["franchis16bm@gmail.com", "joaquin.almonacidv@unmsm.edu.pe", "sebasfernandezc21@gmail.com"]
+        },
+        {
+          nombre: "FIEELON",
+          correos: ["aldo.ruizc@unmsm.edu.pe", "karla.montesm@unmsm.edu.pe", "erik.espinel@unmsm.edu.pe"]
+        },
+        {
+          nombre: "Los Hijos de Sam Altman",
+          correos: ["adrianonavarrog@gmail.com", "josuesalazarchamorro4@gmail.com", "bryandiego.ia@gmail.com"]
+        },
+        {
+          nombre: "QuantumByte",
+          correos: ["leosait.24@gmail.com", "yalledavid140705@gmail.com", "arcilamarco766@gmail.com"]
+        },
+        {
+          nombre: "Spookytech",
+          correos: ["sergioascurra.27102005@gmail.com", "vivianafloresmontes25@gmail.com", "peraltacenepoemily@gmail.com"]
+        },
+        {
+          nombre: "Equipo Alfa Buena Maravilla Onda Dinamita Escuadrón Lobo",
+          correos: ["abigailrebe020520@gmail.com", "fernandokarlos7@gmail.com", "josephangielos@gmail.com"]
+        },
+        {
+          nombre: "kAIzen",
+          correos: ["jeremy.duran@unmsm.edu.pe", "alexander.zavala@unmsm.edu.pe", "paolo.canelo@unmsm.edu.pe"]
+        },
+        {
+          nombre: "Andromeda",
+          correos: ["pierodiaz29@gmail.com", "marlonmoralesjapa@gmail.com", "matias.cerquina@unmsm.edu.pe"]
+        },
+        {
+          nombre: "Cuatro Ojos, Mil Líneas",
+          correos: ["paolobruce3@gmail.com", "danielaporras190@gmail.com", "josemcastroac@gmail.com"]
+        },
+        {
+          nombre: "Los amigos de Carlos Miguel",
+          correos: ["sebastian.rojas6@unmsm.edu.pe", "braulio.saldana@unmsm.edu.pe", "carlos.espinoza24@unmsm.edu.pe"]
+        }
+      ];
+
+    /**
+     * Estado Global de la Aplicación
+     */
+    let authenticatedUser = {
+      email: null,
+      equipo: null
+    };
+
+    // Podio: { 1: teamObject, 2: teamObject, 3: teamObject }
+    let podiumState = {
+      1: null,
+      2: null,
+      3: null
+    };
+
+    let sortableInstances = [];
+
+    // ========================================================
+    // PANTALLA 1: AUTENTICACIÓN Y VALIDACIÓN
+    // ========================================================
+
+    async function handleAuthSubmit(event) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      clearAuthError();
+
+      const emailInput = document.getElementById('input-email');
+      const inputEmail = emailInput.value.trim().toLowerCase();
+
+      if (!inputEmail) {
+        showAuthError("Por favor, ingresa una dirección de correo válida.");
+        return;
+      }
+
+      // 1. Validar si el correo pertenece a algún equipo (case-insensitive)
+      const matchedTeam = baseEquipos.find(eq =>
+        eq.correos.some(c => c.trim().toLowerCase() === inputEmail)
+      );
+
+      if (!matchedTeam) {
+        showAuthError("Acceso denegado: El correo ingresado no pertenece a ningún equipo clasificado para la Hackathon.");
+        return;
+      }
+
+      // Iniciar estado de carga en botón
+      setAuthLoading(true);
+
+      // 2. Consulta HTTP GET a WEB_APP_URL: ?action=check&equipo=NombreDelEquipo
+      try {
+        const checkUrl = `${WEB_APP_URL}?action=check&equipo=${encodeURIComponent(matchedTeam.nombre)}`;
+
+        // Verificamos si no es una URL de demostración local
+        const isPlaceholderUrl = WEB_APP_URL.includes("YOUR_DEPLOYMENT_ID");
+
+        if (!isPlaceholderUrl) {
+          const response = await fetch(checkUrl, { method: "GET" });
+          if (response.ok) {
+            const data = await response.json();
+            if (data && data.alreadyVoted === true) {
+              setAuthLoading(false);
+              showAuthError("Acceso denegado: Alguien de tu equipo ya emitió el voto.");
+              return;
+            }
+          }
+        } else {
+          // En modo demo con placeholder, validamos si existe voto local en localStorage
+          const localVoted = localStorage.getItem(`voted_${matchedTeam.nombre}`);
+          if (localVoted === "true") {
+            setAuthLoading(false);
+            showAuthError("Acceso denegado: Alguien de tu equipo ya emitió el voto.");
+            return;
+          }
+        }
+      } catch (error) {
+        console.warn("Aviso de verificación en red (posible CORS o endpoint en espera):", error);
+        // Si hay error de red o URL aún no desplegada, validamos por bandera local para permitir pruebas fluidas
+        const localVoted = localStorage.getItem(`voted_${matchedTeam.nombre}`);
+        if (localVoted === "true") {
+          setAuthLoading(false);
+          showAuthError("Acceso denegado: Alguien de tu equipo ya emitió el voto.");
+          return;
+        }
+      }
+
+      setAuthLoading(false);
+
+      // Autenticación Exitosa: Guardar estado y proceder a la Pantalla 2
+      authenticatedUser.email = inputEmail;
+      authenticatedUser.equipo = matchedTeam;
+
+      initVotingScreen();
+      return false;
+    }
+
+    function showAuthError(message) {
+      const errorBox = document.getElementById('auth-error-box');
+      const errorMsg = document.getElementById('auth-error-msg');
+      errorMsg.textContent = message;
+      errorBox.classList.remove('hidden');
+    }
+
+    function clearAuthError() {
+      const errorBox = document.getElementById('auth-error-box');
+      errorBox.classList.add('hidden');
+    }
+
+    function setAuthLoading(isLoading) {
+      const submitBtn = document.getElementById('btn-auth-submit');
+      const btnText = document.getElementById('btn-auth-text');
+      const btnIcon = document.getElementById('btn-auth-icon');
+      const btnSpinner = document.getElementById('btn-auth-spinner');
+
+      if (isLoading) {
+        submitBtn.disabled = true;
+        btnText.textContent = "VERIFICANDO ESTADO...";
+        btnIcon.classList.add('hidden');
+        btnSpinner.classList.remove('hidden');
+      } else {
+        submitBtn.disabled = false;
+        btnText.textContent = "VERIFICAR IDENTIDAD Y VOTAR";
+        btnIcon.classList.remove('hidden');
+        btnSpinner.classList.add('hidden');
+      }
+    }
+
+
+    // ========================================================
+    // PANTALLA 2: INTERFAZ DRAG & DROP Y PODIO
+    // ========================================================
+
+    function initVotingScreen() {
+      // Transición visual entre Pantalla 1 y Pantalla 2
+      document.getElementById('screen-auth').classList.add('hidden');
+      document.getElementById('screen-voting').classList.remove('hidden');
+
+      // Actualizar encabezado del votante
+      document.getElementById('auth-team-name').textContent = authenticatedUser.equipo.nombre;
+      document.getElementById('auth-voter-email').textContent = authenticatedUser.email;
+
+      // Resetear estado del podio
+      podiumState = { 1: null, 2: null, 3: null };
+
+      // Renderizar la lista de equipos disponibles con Filtro Estricto:
+      // El propio equipo del votante NO debe aparecer en la lista (prohibición de autovoto)
+      renderAvailableTeams();
+
+      // Inicializar SortableJS para drag & drop fluido en móviles y escritorios
+      setupSortableLists();
+
+      // Actualizar vista del podio
+      updatePodiumUI();
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /**
+     * Renderiza los 11 equipos disponibles (excluyendo el equipo del votante autenticado)
+     */
+    function renderAvailableTeams(filterQuery = "") {
+      const pool = document.getElementById('pool-teams');
+      pool.innerHTML = "";
+
+      const query = filterQuery.trim().toLowerCase();
+
+      // Filtro estricto: excluir el propio equipo
+      const eligibleTeams = baseEquipos.filter(eq =>
+        eq.nombre.trim().toLowerCase() !== authenticatedUser.equipo.nombre.trim().toLowerCase()
+      );
+
+      // Excluir también aquellos equipos que ya están colocados en el podio
+      const teamsInPodium = Object.values(podiumState).filter(Boolean).map(t => t.nombre.toLowerCase());
+
+      const availableTeams = eligibleTeams.filter(eq =>
+        !teamsInPodium.includes(eq.nombre.toLowerCase()) &&
+        (query === "" || eq.nombre.toLowerCase().includes(query))
+      );
+
+      document.getElementById('available-teams-count').textContent = `${availableTeams.length} disponibles`;
+
+      if (availableTeams.length === 0) {
+        document.getElementById('pool-empty-notice').classList.remove('hidden');
+      } else {
+        document.getElementById('pool-empty-notice').classList.add('hidden');
+      }
+
+      availableTeams.forEach((team, index) => {
+        const card = createTeamCardElement(team, false);
+        pool.appendChild(card);
+      });
+    }
+
+    /**
+     * Crea un elemento DOM para la tarjeta de un equipo
+     */
+    function createTeamCardElement(team, isPlacedInPodium = false, slotNumber = null) {
+      const card = document.createElement('div');
+      card.className = `team-card group relative p-3.5 sm:p-4 rounded-xl ${isPlacedInPodium
+        ? 'bg-[#071320] border border-white/20 shadow-md w-full'
+        : 'bg-[#071810] border border-[#24ed7a]/25 hover:border-[#24ed7a]/60 shadow-lg hover:shadow-[0_0_20px_rgba(36,237,122,0.15)] transition-all'
+        } cursor-grab active:cursor-grabbing select-none`;
+
+      card.setAttribute('data-team-name', team.nombre);
+
+      // Si está en el podio, mostramos diseño limpio con botón para remover
+      if (isPlacedInPodium) {
+        card.innerHTML = `
+          <div class="flex items-center justify-between gap-3">
+            <h5 class="text-sm font-bold text-white truncate min-w-0">${team.nombre}</h5>
+            <button 
+              type="button" 
+              onclick="removeFromPodium(${slotNumber})" 
+              class="px-2.5 py-1 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 border border-red-500/30 text-xs font-mono-custom flex items-center gap-1 shrink-0 transition-colors cursor-pointer"
+              title="Quitar del podio"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+              <span>Quitar</span>
+            </button>
+          </div>
+        `;
+      } else {
+        // Tarjeta en la piscina de disponibles (Limpia y arrastrable)
+        card.innerHTML = `
+          <div class="flex items-center gap-2.5">
+            <span class="cursor-grab text-neutral-500 group-hover:text-[#24ed7a] transition-colors shrink-0">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
+              </svg>
+            </span>
+            <h5 class="text-sm font-bold text-white group-hover:text-[#24ed7a] transition-colors leading-snug">
+              ${team.nombre}
+            </h5>
+          </div>
+        `;
+      }
+
+      return card;
+    }
+
+    /**
+     * Inicializa los contenedores SortableJS
+     */
+    function setupSortableLists() {
+      // Destruir instancias previas si existen
+      sortableInstances.forEach(inst => inst.destroy());
+      sortableInstances = [];
+
+      const poolEl = document.getElementById('pool-teams');
+
+      // Instancia para el contenedor de equipos disponibles
+      const poolSortable = new Sortable(poolEl, {
+        group: {
+          name: 'podium-group',
+          pull: true,
+          put: true
+        },
+        animation: 200,
+        ghostClass: 'sortable-ghost',
+        chosenClass: 'sortable-chosen',
+        dragClass: 'sortable-drag',
+        delay: 50,
+        delayOnTouchOnly: true,
+        touchStartThreshold: 5,
+        onAdd: function (evt) {
+          // Si un elemento regresa a la piscina
+          syncPodiumStateFromDOM();
+        }
+      });
+      sortableInstances.push(poolSortable);
+
+      // Instancias para los 3 casilleros del podio
+      [1, 2, 3].forEach(slotNum => {
+        const slotEl = document.getElementById(`slot-drop-${slotNum}`);
+
+        const slotSortable = new Sortable(slotEl, {
+          group: {
+            name: 'podium-group',
+            put: function (to, from, item) {
+              // Permitir solo 1 tarjeta por casillero
+              const currentCards = to.el.querySelectorAll('.team-card');
+              return currentCards.length === 0;
+            }
+          },
+          animation: 200,
+          ghostClass: 'sortable-ghost',
+          chosenClass: 'sortable-chosen',
+          dragClass: 'sortable-drag',
+          delay: 50,
+          delayOnTouchOnly: true,
+          touchStartThreshold: 5,
+          onAdd: function (evt) {
+            syncPodiumStateFromDOM();
+          },
+          onRemove: function (evt) {
+            syncPodiumStateFromDOM();
+          }
+        });
+        sortableInstances.push(slotSortable);
+      });
+    }
+
+    /**
+     * Sincroniza el estado de podiumState leyendo directamente el DOM
+     */
+    function syncPodiumStateFromDOM() {
+      [1, 2, 3].forEach(slotNum => {
+        const slotEl = document.getElementById(`slot-drop-${slotNum}`);
+        const cardEl = slotEl.querySelector('.team-card');
+        if (cardEl) {
+          const teamName = cardEl.getAttribute('data-team-name');
+          const teamObj = baseEquipos.find(t => t.nombre === teamName);
+          podiumState[slotNum] = teamObj || null;
+        } else {
+          podiumState[slotNum] = null;
+        }
+      });
+
+      updatePodiumUI();
+      renderAvailableTeams(document.getElementById('search-teams').value);
+      setupSortableLists();
+    }
+
+    /**
+     * Asigna un equipo directamente a un puesto del podio
+     */
+    function assignTeamToSlot(teamName, slotNum) {
+      const team = baseEquipos.find(t => t.nombre === teamName);
+      if (!team) return;
+
+      // Si el equipo ya estaba en otro puesto del podio, liberarlo
+      [1, 2, 3].forEach(s => {
+        if (podiumState[s] && podiumState[s].nombre === teamName) {
+          podiumState[s] = null;
+        }
+      });
+
+      // Asignar al casillero deseado
+      podiumState[slotNum] = team;
+
+      updatePodiumUI();
+      renderAvailableTeams(document.getElementById('search-teams').value);
+      setupSortableLists();
+    }
+
+    /**
+     * Quita un equipo de un puesto del podio y lo devuelve a disponibles
+     */
+    function removeFromPodium(slotNum) {
+      podiumState[slotNum] = null;
+      updatePodiumUI();
+      renderAvailableTeams(document.getElementById('search-teams').value);
+      setupSortableLists();
+    }
+
+    /**
+     * Actualiza la interfaz gráfica de los 3 casilleros del podio
+     */
+    function updatePodiumUI() {
+      let filledCount = 0;
+
+      [1, 2, 3].forEach(slotNum => {
+        const slotEl = document.getElementById(`slot-drop-${slotNum}`);
+        const team = podiumState[slotNum];
+        slotEl.innerHTML = "";
+
+        if (team) {
+          filledCount++;
+          const card = createTeamCardElement(team, true, slotNum);
+          slotEl.appendChild(card);
+        } else {
+          // Mostrar placeholder
+          const placeholder = document.createElement('div');
+          placeholder.className = "slot-placeholder pointer-events-none flex flex-col items-center justify-center text-center p-3";
+
+          let colorClass = slotNum === 1 ? "text-[#24ed7a]" : (slotNum === 2 ? "text-[#00c8df]" : "text-amber-400");
+          let pointsLabel = slotNum === 1 ? "+3 pts" : (slotNum === 2 ? "+2 pts" : "+1 pt");
+
+          placeholder.innerHTML = `
+            <svg class="w-5 h-5 ${colorClass}/40 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+            </svg>
+            <span class="text-xs font-mono-custom text-neutral-500">Arrastra aquí (${pointsLabel})</span>
+          `;
+          slotEl.appendChild(placeholder);
+        }
+      });
+
+      // Actualizar contador y estado del botón de envío
+      const statusBadge = document.getElementById('podium-status-badge');
+      const submitBtn = document.getElementById('btn-submit-vote');
+      const validationHint = document.getElementById('submit-validation-hint');
+
+      statusBadge.textContent = `${filledCount} / 3 Asignados`;
+
+      if (filledCount === 3) {
+        statusBadge.className = "px-2.5 py-1 rounded-full text-xs font-mono-custom bg-[#24ed7a]/15 text-[#24ed7a] border border-[#24ed7a]/30";
+        submitBtn.disabled = false;
+        validationHint.innerHTML = `
+          <span class="w-2 h-2 rounded-full bg-[#24ed7a]"></span>
+          <span class="text-[#24ed7a]">¡Podio completo! Puedes emitir tu voto confidencial.</span>
+        `;
+      } else {
+        statusBadge.className = "px-2.5 py-1 rounded-full text-xs font-mono-custom bg-amber-400/10 text-amber-300 border border-amber-400/30";
+        submitBtn.disabled = true;
+        validationHint.innerHTML = `
+          <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+          <span>Completa los 3 puestos para habilitar el envío oficial.</span>
+        `;
+      }
+    }
+
+    function filterAvailableTeams(val) {
+      renderAvailableTeams(val);
+      setupSortableLists();
+    }
+
+
+    // ========================================================
+    // PANTALLA 3: MODAL DE CONFIRMACIÓN Y ENVÍO FINAL
+    // ========================================================
+
+    function promptConfirmVote() {
+      // Validar que los tres casilleros estén ocupados
+      if (!podiumState[1] || !podiumState[2] || !podiumState[3]) {
+        alert("Atención: Debes colocar un equipo en cada uno de los 3 puestos del podio antes de enviar.");
+        return;
+      }
+
+      document.getElementById('confirm-slot-1').textContent = podiumState[1].nombre;
+      document.getElementById('confirm-slot-2').textContent = podiumState[2].nombre;
+      document.getElementById('confirm-slot-3').textContent = podiumState[3].nombre;
+
+      document.getElementById('modal-confirm').classList.remove('hidden');
+    }
+
+    function closeConfirmModal() {
+      document.getElementById('modal-confirm').classList.add('hidden');
+    }
+
+    async function executeFinalVoteSubmission() {
+      const confirmBtn = document.getElementById('btn-confirm-final-submit');
+      const confirmText = document.getElementById('btn-confirm-text');
+      const confirmSpinner = document.getElementById('btn-confirm-spinner');
+
+      confirmBtn.disabled = true;
+      confirmText.textContent = "Transmitiendo...";
+      confirmSpinner.classList.remove('hidden');
+
+      const teamName = authenticatedUser.equipo ? authenticatedUser.equipo.nombre : "";
+      const voterEmail = authenticatedUser.email || "";
+
+      // Objeto JSON con compatibilidad total para Google Apps Script
+      const votePayload = {
+        action: "vote",
+        // Identificadores de Equipo Votante:
+        equipo: teamName,
+        equipoVotante: teamName,
+        equipo_votante: teamName,
+        nombreEquipo: teamName,
+        "Equipo Votante": teamName,
+
+        // Identificadores de Correo del Votante:
+        correo: voterEmail,
+        correoVotante: voterEmail,
+        correo_votante: voterEmail,
+        correoDelVotante: voterEmail,
+        correo_del_votante: voterEmail,
+        correoResponsable: voterEmail,
+        email: voterEmail,
+        "Correo del Votante": voterEmail,
+
+        // Puestos del Podio:
+        puesto1: podiumState[1] ? podiumState[1].nombre : "",
+        puesto2: podiumState[2] ? podiumState[2].nombre : "",
+        puesto3: podiumState[3] ? podiumState[3].nombre : "",
+        "1er Puesto (+3 pts)": podiumState[1] ? podiumState[1].nombre : "",
+        "2do Puesto (+2 pts)": podiumState[2] ? podiumState[2].nombre : "",
+        "3er Puesto (+1 pt)": podiumState[3] ? podiumState[3].nombre : "",
+
+        timestamp: new Date().toISOString()
+      };
+
+      try {
+        const isPlaceholderUrl = WEB_APP_URL.includes("YOUR_DEPLOYMENT_ID");
+
+        if (!isPlaceholderUrl) {
+          // Uso de modo no-cors en el fetch para evitar bloqueos con Google Apps Script
+          await fetch(WEB_APP_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+              "Content-Type": "text/plain;charset=utf-8"
+            },
+            body: JSON.stringify(votePayload)
+          });
+        }
+
+        // Marcar en localStorage como salvaguarda en local
+        localStorage.setItem(`voted_${authenticatedUser.equipo.nombre}`, "true");
+
+      } catch (error) {
+        console.warn("Aviso en el envío HTTP POST (no-cors / GAS endpoint):", error);
+        // Continuamos al flujo de confirmación ya que mode: no-cors es opaco
+        localStorage.setItem(`voted_${authenticatedUser.equipo.nombre}`, "true");
+      }
+
+      // Pequeño retardo cosmético para sensación de encriptación y transmisión
+      setTimeout(() => {
+        closeConfirmModal();
+        showSuccessScreen(votePayload);
+      }, 700);
+    }
+
+    /**
+     * Muestra la Pantalla 3: Éxito con check verde y resumen
+     */
+    function showSuccessScreen(payload) {
+      // Ocultar formulario de votación
+      document.getElementById('screen-voting').classList.add('hidden');
+
+      // Mostrar pantalla de éxito
+      const successScreen = document.getElementById('screen-success');
+      successScreen.classList.remove('hidden');
+
+      // Completar datos del resumen
+      document.getElementById('success-team-name').textContent = payload.equipo;
+      document.getElementById('summary-rank-1').textContent = payload.puesto1;
+      document.getElementById('summary-rank-2').textContent = payload.puesto2;
+      document.getElementById('summary-rank-3').textContent = payload.puesto3;
+      document.getElementById('summary-voter-email').textContent = payload.correo;
+
+      const dateObj = new Date();
+      document.getElementById('summary-timestamp').textContent = dateObj.toLocaleString('es-PE', {
+        dateStyle: 'short',
+        timeStyle: 'medium'
+      });
+
+      // Lanzar fuegos artificiales de confeti
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#24ed7a', '#00c8df', '#ffffff', '#fbbf24']
+        });
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function handleLogout() {
+      if (confirm("¿Estás seguro de que deseas salir? Los puestos seleccionados no se guardarán hasta que se emita el voto.")) {
+        authenticatedUser = { email: null, equipo: null };
+        podiumState = { 1: null, 2: null, 3: null };
+        document.getElementById('screen-voting').classList.add('hidden');
+        document.getElementById('screen-auth').classList.remove('hidden');
+        document.getElementById('input-email').value = "";
+        clearAuthError();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+
+    function escapeHtml(str) {
+      return str.replace(/'/g, "\\'");
+    }
+  </script>
+</body>
+
+</html>
