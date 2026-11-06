@@ -100,11 +100,11 @@ const baseEquipos = [
     ]
   },
   {
-    nombre: "Los amigos de Carlos Miguel",
+    nombre: "Los Telegalacticos",
     correos: [
-      "braulio.saldana@unmsm.edu.pe",
-      "sebastian.rojas6@unmsm.edu.pe",
-      "carlos.espinoza24@unmsm.edu.pe"
+      "luis.rojas44@unmsm.edu.pe",
+      "sergio.rosales@unmsm.edu.pe",
+      "cristian.borja@unmsm.edu.pe"
     ]
   }
 ];
