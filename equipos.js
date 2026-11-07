@@ -5,7 +5,7 @@
  * ====================================================================
  * 
  * Estructura de Datos Oficial:
- * Mapeo de los 12 equipos clasificados y la lista exhaustiva de correos
+ * Mapeo de los 11 equipos clasificados y la lista exhaustiva de correos
  * autorizados de sus integrantes. Cualquier integrante registrado de un
  * equipo puede emitir el voto único representativo.
  */
@@ -25,14 +25,6 @@ const baseEquipos = [
       "kiara.jaramillor@unmsm.edu.pe",
       "alexandra.mkoos@gmail.com",
       "antonella.rojasq@unmsm.edu.pe"
-    ]
-  },
-  {
-    nombre: "Magna FISI",
-    correos: [
-      "joaquin.almonacidv@unmsm.edu.pe",
-      "franchis16bm@gmail.com",
-      "sebasfernandezc21@gmail.com"
     ]
   },
   {

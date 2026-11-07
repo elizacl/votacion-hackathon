@@ -163,7 +163,7 @@
     }
 
     /**
-     * Renderiza los 11 equipos disponibles (excluyendo el equipo del votante autenticado)
+     * Renderiza los 10 equipos disponibles (excluyendo el equipo del votante autenticado)
      */
     function renderAvailableTeams(filterQuery = "") {
       const pool = document.getElementById('pool-teams');

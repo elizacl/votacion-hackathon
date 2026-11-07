@@ -34,7 +34,7 @@ El proyecto ha sido modularizado para facilitar su mantenimiento, versionado y d
 VotosHackathon/
 ├── index.html                   # Vista principal de la SPA (Pantallas 1, 2 y 3)
 ├── config.js                    # Configuración global y URL de Google Apps Script
-├── equipos.js                   # Nómina oficial de los 12 equipos y correos autorizados
+├── equipos.js                   # Nómina oficial de los 11 equipos y correos autorizados
 ├── app.js                       # Lógica de negocio (Autenticación, Podio, Drag & Drop, API)
 ├── styles.css                   # Estilos personalizados, animaciones y glassmorphism
 ├── google_apps_script_backend.gs# Código fuente del backend para Google Sheets
@@ -47,7 +47,7 @@ VotosHackathon/
 | Archivo | Responsabilidad |
 | :--- | :--- |
 | **`config.js`** | Contiene la constante `WEB_APP_URL` que apunta al Web App de Google Apps Script y constantes de puntaje. |
-| **`equipos.js`** | Define el arreglo de los 12 equipos clasificados y la lista de correos de sus integrantes autorizados. |
+| **`equipos.js`** | Define el arreglo de los 11 equipos clasificados y la lista de correos de sus integrantes autorizados. |
 | **`app.js`** | Controla el flujo completo: validación de correo, consulta a la API de estado de voto, control del podio, modal de confirmación y envío del voto. |
 | **`styles.css`** | Clases de diseño, paleta cyberpunk, scrollbars personalizados y retroalimentación de arrastre (`.sortable-ghost`, `.sortable-drag`). |
 | **`google_apps_script_backend.gs`** | Script de Google Apps Script para recibir `doGet` (verificar si un equipo ya votó) y `doPost` (guardar la votación en la hoja de cálculo). |
