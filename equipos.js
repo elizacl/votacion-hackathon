@@ -1,7 +1,6 @@
 /**
  * ====================================================================
  * REGISTRO OFICIAL DE EQUIPOS Y PARTICIPANTES
- * Hackathon ENEISOFT XVI 2026 — FISI · UNMSM
  * ====================================================================
  * 
  * Estructura de Datos Oficial:

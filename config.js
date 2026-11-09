@@ -1,7 +1,6 @@
 /**
  * ====================================================================
  * CONFIGURACIÓN DE LA PLATAFORMA DE VOTO
- * Hackathon ENEISOFT XVI 2026 — FISI · UNMSM
  * ====================================================================
  * 
  * En este archivo se centralizan los endpoints y parámetros configurables

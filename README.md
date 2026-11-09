@@ -34,7 +34,7 @@ El proyecto ha sido modularizado para facilitar su mantenimiento, versionado y d
 VotosHackathon/
 ├── index.html                   # Vista principal de la SPA (Pantallas 1, 2 y 3)
 ├── config.js                    # Configuración global y URL de Google Apps Script
-├── equipos.js                   # Nómina oficial de los 11 equipos y correos autorizados
+├── equipos.js                   # Nómina oficial de equipos y correos autorizados (100% dinámico)
 ├── app.js                       # Lógica de negocio (Autenticación, Podio, Drag & Drop, API)
 ├── styles.css                   # Estilos personalizados, animaciones y glassmorphism
 ├── google_apps_script_backend.gs# Código fuente del backend para Google Sheets
@@ -47,7 +47,7 @@ VotosHackathon/
 | Archivo | Responsabilidad |
 | :--- | :--- |
 | **`config.js`** | Contiene la constante `WEB_APP_URL` que apunta al Web App de Google Apps Script y constantes de puntaje. |
-| **`equipos.js`** | Define el arreglo de los 11 equipos clasificados y la lista de correos de sus integrantes autorizados. |
+| **`equipos.js`** | Define el arreglo de equipos clasificados y la lista de correos de sus integrantes autorizados. Al editar este archivo, toda la interfaz se adapta automáticamente. |
 | **`app.js`** | Controla el flujo completo: validación de correo, consulta a la API de estado de voto, control del podio, modal de confirmación y envío del voto. |
 | **`styles.css`** | Clases de diseño, paleta cyberpunk, scrollbars personalizados y retroalimentación de arrastre (`.sortable-ghost`, `.sortable-drag`). |
 | **`google_apps_script_backend.gs`** | Script de Google Apps Script para recibir `doGet` (verificar si un equipo ya votó) y `doPost` (guardar la votación en la hoja de cálculo). |
@@ -86,9 +86,9 @@ const WEB_APP_URL = "https://script.google.com/macros/s/TU_ID_DE_APPS_SCRIPT/exe
 
 ---
 
-## 👥 Gestión de Equipos y Participantes
+## 👥 Gestión Dinámica de Equipos y Participantes
 
-Para modificar, agregar o actualizar equipos e integrantes, edita únicamente el archivo [`equipos.js`](./equipos.js):
+El sistema es **100% dinámico**. Para agregar, quitar o modificar equipos y correos autorizados, **únicamente debes editar el archivo [`equipos.js`](./equipos.js)** sin necesidad de tocar `index.html`, `app.js` ni volver a desplegar el Google Apps Script:
 
 ```javascript
 // equipos.js
@@ -99,13 +99,19 @@ const baseEquipos = [
       "integrante1@unmsm.edu.pe",
       "integrante2@gmail.com",
       "integrante3@unmsm.edu.pe"
+      // Puedes poner 1, 2, 3, 5 o la cantidad de correos que necesites por equipo
     ]
   },
-  // ... resto de equipos
+  // Puedes agregar o quitar tantos equipos como desees
 ];
 ```
 
-*Nota: La validación es insensible a mayúsculas y espacios en blanco al inicio o final.*
+### ¿Qué se actualiza automáticamente al editar `equipos.js`?
+- **Contadores de la interfaz:** El badge de la pantalla de inicio (*"X Equipos Clasificados"*) y el contador de equipos elegibles (*"X-1 disponibles"*) se recalculan solos.
+- **Cantidad flexible de integrantes:** Cada equipo puede tener cualquier número de correos registrados (`1`, `3`, `5`, etc.).
+- **Filtro anti auto-voto y tarjetas del podio:** Se generan dinámicamente a partir de los equipos presentes en el arreglo.
+- **Compatibilidad con Google Sheets:** El backend valida por el nombre del equipo enviado, por lo que cualquier nuevo equipo funciona de inmediato sin reconfigurar Google Sheets.
+- **Validación flexible:** Insensible a mayúsculas/minúsculas y espacios en blanco accidentales.
 
 ---
 
